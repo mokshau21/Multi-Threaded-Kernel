@@ -8,15 +8,27 @@ times 33 db 0
 
 start:
     jmp 0x7c0:step2
+
+handle_zero:
+    mov ah,0eh
+    mov bx,0x00
+    mov al,'A'
+    int 0x10
+    iret
 step2:
     cli ; clear interrupts to prevent any issues during boot
-    mov ax, 0x07c0 ; set up the segment registers
+    mov ax, 0x7c0 ; set up the segment registers
     mov ds, ax
     mov es, ax
     mov ax,0x00
     mov ss, ax
     mov sp, 0x7c00 ; set up the stack
     sti ; enable interrupts after setup
+    mov word[ss:0x00],handle_zero ; set the interrupt handler for interrupt 0
+    mov word[ss:0x02],0x7c0 ; set the code segment for the interrupt handler
+
+    mov ax,0x00
+    div ax
 
     mov si, message
     call print
