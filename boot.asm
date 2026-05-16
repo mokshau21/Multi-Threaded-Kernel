@@ -1,7 +1,14 @@
 ORG 0
 BITS 16
-jmp 0x7c0:start
+_start:
+    jmp short start
+    nop
+
+times 33 db 0
+
 start:
+    jmp 0x7c0:step2
+step2:
     cli ; clear interrupts to prevent any issues during boot
     mov ax, 0x07c0 ; set up the segment registers
     mov ds, ax
@@ -29,6 +36,6 @@ print_char:
     mov ah, 0eh;
     int 0x10
     ret
-    message db 'Hello, World!', 0
+    message db 'Hello, World!',0    
     times 510 - ($ - $$) db 0
     dw 0xAA55
