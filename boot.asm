@@ -1,6 +1,16 @@
-ORG 0x7c00
+ORG 0
 BITS 16
+jmp 0x7c0:start
 start:
+    cli ; clear interrupts to prevent any issues during boot
+    mov ax, 0x07c0 ; set up the segment registers
+    mov ds, ax
+    mov es, ax
+    mov ax,0x00
+    mov ss, ax
+    mov sp, 0x7c00 ; set up the stack
+    sti ; enable interrupts after setup
+
     mov si, message
     call print
     jmp $
