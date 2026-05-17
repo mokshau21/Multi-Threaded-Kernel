@@ -64,6 +64,10 @@ protected_mode_entry:
     mov gs, ax
     mov ebp,0x00200000 ; set up the stack pointer
     mov esp,ebp
+    ;Enable the A20 line to access memory above 1MB
+    in al, 0x92
+    or al, 2
+    out 0x92, al
     jmp $ ; infinite loop to prevent the CPU from executing random instructions
 
 times 510 - ($ - $$) db 0
